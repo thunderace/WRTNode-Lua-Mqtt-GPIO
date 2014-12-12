@@ -10,11 +10,12 @@ end
 --Reads a character from file 'where' and returns the string
 function readFromFile (where)
   local fileToRead=io.open(where, 'r')
-  if f~=nil then
+  if fileToRead~=nil then
     fileStr = fileToRead:read(1)
     fileToRead:close()
-  end 
-  return fileStr
+    return fileStr
+  end
+  return nil
 end
 
 --Returns true if file exists

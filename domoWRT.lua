@@ -38,6 +38,7 @@ end
 
 
 function log(level, message)
+  print(message)
   local logMsg = string.format("{\"node\":\"" .. args.name .. "\",\"level\":\"" .. level .. "\",\"date\":" .. dateString() .. "\"msg\":\"" .. message .. "\"}")
   mqtt_client:publish("/home_dev/log/" .. args.name, logMsg, 1);             
 end
@@ -71,7 +72,8 @@ while (error_message == nil) do
 --  if (index > #messages) then index = 1 end
   local now = getUnixTimestamp()
   local valClosed = readGPIO(0) --read the value of the pin
-  if valClosed~=nil then
+  if valClosed == nil then
+    log("error", "closed GPIO read failed")
     mqtt_client:destroy()
     os.exit()
   end
@@ -79,7 +81,8 @@ while (error_message == nil) do
   mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/sensors/CLOSED/value/lastupdate", now);
 
   local valOpen = readGPIO(1) --read the value of the pin
-  if valOpen~=nil then
+  if valOpen == nil then
+    log("error", "open GPIO read failed")
     mqtt_client:destroy()
     os.exit()
   end
