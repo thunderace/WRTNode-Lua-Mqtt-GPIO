@@ -71,9 +71,18 @@ while (error_message == nil) do
 --  if (index > #messages) then index = 1 end
   local now = getUnixTimestamp()
   local valClosed = readGPIO(0) --read the value of the pin
+  if valClosed~=nil then
+    mqtt_client:destroy()
+    os.exit()
+  end
   mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/sensors/CLOSED/value", valClosed,1);
   mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/sensors/CLOSED/value/lastupdate", now);
+
   local valOpen = readGPIO(1) --read the value of the pin
+  if valOpen~=nil then
+    mqtt_client:destroy()
+    os.exit()
+  end
   mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/sensors/OPEN/value", valOpen,1);
   mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/sensors/OPEN/value/lastupdate", now);
 
