@@ -38,7 +38,6 @@ end
 
 
 function log(level, message)
---     String jsonLog = "{\"node\":\"ArDomo3\",\"level\":\"" + String(level) +"\",\"date\":\"" + Time.year() + "-" + Time.month() + "-" + (Time.day() > 9 ? String(Time.day()) : "0"+String(Time.day())) +"T"+Time.hour()+":"+Time.minute()+":"+Time.second() + ".000Z" + "\",\"msg\":\"" + String(message) + "\"}";
   local logMsg = string.format("{\"node\":\"" .. args.name .. "\",\"level\":\"" .. level .. "\",\"date\":" .. dateString() .. "\"msg\":\"" .. message .. "\"}")
   mqtt_client:publish("/home_dev/log/" .. args.name, logMsg, 1);             
 end
@@ -46,8 +45,8 @@ end
 
 
 function dateString()
---    2014-12-05T08:15:14.688Z
-
+-- 2014-12-05T08:15:14.688Z
+-- TODO : use GMT time
   return os.date("%Y-%m-%dT%H:%M:%S.000Z")
 end
 
@@ -62,6 +61,7 @@ mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/alive", "1", 1);
 mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/alive/lastupdate", getUnixTimestamp());
 log("info", args.name .. " started")
 configureInGPIO(0) -- closed 
+-- WARNING : don't use this GPIO for now : need more infos
 configureInGPIO(1) -- open 
 while (error_message == nil) do
 --  mqtt_client:publish("/home_dev/nodes/" .. args.name .. "/sensors/TESTSENSOR/value", messages[index],1);                                                                                                                                    
